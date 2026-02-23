@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | wos helper map</title>
+    <title>Unity Web Player | wos-helper</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
@@ -17,14 +17,11 @@
         </div>
       </div>
       <div id="unity-warning"> </div>
-      <button id="unity-fullscreen-button" title="Toggle fullscreen">
-        <svg id="fs-expand" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 1 1 1 1 6"/><polyline points="14 1 19 1 19 6"/><polyline points="6 19 1 19 1 14"/><polyline points="14 19 19 19 19 14"/>
-        </svg>
-        <svg id="fs-collapse" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-          <polyline points="1 6 6 6 6 1"/><polyline points="14 1 14 6 19 6"/><polyline points="1 14 6 14 6 19"/><polyline points="19 14 14 14 14 19"/>
-        </svg>
-      </button>
+      <div id="unity-footer">
+        <div id="unity-logo-title-footer"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">wos-helper</div>
+      </div>
     </div>
     <script>
       var canvas = document.querySelector("#unity-canvas");
@@ -55,15 +52,15 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/wos-helper - Kopie.loader.js";
+      var loaderUrl = buildUrl + "/wos-helper.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/wos-helper - Kopie.data.br",
-        frameworkUrl: buildUrl + "/wos-helper - Kopie.framework.js.br",
-        codeUrl: buildUrl + "/wos-helper - Kopie.wasm.br",
+        dataUrl: buildUrl + "/wos-helper.data",
+        frameworkUrl: buildUrl + "/wos-helper.framework.js",
+        codeUrl: buildUrl + "/wos-helper.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "wos-helper",
-        productName: "wos helper map",
+        productName: "wos-helper",
         productVersion: "1.0",
         showBanner: unityShowBanner,
         // errorHandler: function(err, url, line) {
@@ -120,19 +117,9 @@
           document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
               }).then((unityInstance) => {
                 document.querySelector("#unity-loading-bar").style.display = "none";
-                var fsBtn = document.querySelector("#unity-fullscreen-button");
-                var expandIcon = document.querySelector("#fs-expand");
-                var collapseIcon = document.querySelector("#fs-collapse");
-                function updateFsIcons() {
-                  var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-                  expandIcon.style.display = isFs ? "none" : "block";
-                  collapseIcon.style.display = isFs ? "block" : "none";
-                }
-                fsBtn.onclick = () => {
-                  unityInstance.SetFullscreen(document.fullscreenElement ? 0 : 1);
+                document.querySelector("#unity-fullscreen-button").onclick = () => {
+                  unityInstance.SetFullscreen(1);
                 };
-                document.addEventListener("fullscreenchange", updateFsIcons);
-                document.addEventListener("webkitfullscreenchange", updateFsIcons);
 
               }).catch((message) => {
                 alert(message);
