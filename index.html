@@ -17,11 +17,14 @@
         </div>
       </div>
       <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">wos-helper</div>
-      </div>
+      <button id="unity-fullscreen-button" title="Toggle fullscreen">
+        <svg id="fs-expand" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 1 1 1 1 6"/><polyline points="14 1 19 1 19 6"/><polyline points="6 19 1 19 1 14"/><polyline points="14 19 19 19 19 14"/>
+        </svg>
+        <svg id="fs-collapse" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <polyline points="1 6 6 6 6 1"/><polyline points="14 1 14 6 19 6"/><polyline points="1 14 6 14 6 19"/><polyline points="19 14 14 14 14 19"/>
+        </svg>
+      </button>
     </div>
     <script>
       var canvas = document.querySelector("#unity-canvas");
@@ -52,12 +55,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/wos-helper.loader.js";
+      var loaderUrl = buildUrl + "/wos.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/wos-helper.data",
-        frameworkUrl: buildUrl + "/wos-helper.framework.js",
-        codeUrl: buildUrl + "/wos-helper.wasm",
+        dataUrl: buildUrl + "/wos.data",
+        frameworkUrl: buildUrl + "/wos.framework.js",
+        codeUrl: buildUrl + "/wos.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "wos-helper",
         productName: "wos-helper",
@@ -117,9 +120,19 @@
           document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
               }).then((unityInstance) => {
                 document.querySelector("#unity-loading-bar").style.display = "none";
-                document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
+                var fsBtn = document.querySelector("#unity-fullscreen-button");
+                var expandIcon = document.querySelector("#fs-expand");
+                var collapseIcon = document.querySelector("#fs-collapse");
+                function updateFsIcons() {
+                  var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+                  expandIcon.style.display = isFs ? "none" : "block";
+                  collapseIcon.style.display = isFs ? "block" : "none";
+                }
+                fsBtn.onclick = () => {
+                  unityInstance.SetFullscreen(document.fullscreenElement ? 0 : 1);
                 };
+                document.addEventListener("fullscreenchange", updateFsIcons);
+                document.addEventListener("webkitfullscreenchange", updateFsIcons);
 
               }).catch((message) => {
                 alert(message);
